@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Navigation;
 using System.Windows.Threading;
-using Microsoft.Win32;
 using SpotifyAPI.Web;
 
 namespace PodcastMusicSwitcher
@@ -20,44 +15,13 @@ namespace PodcastMusicSwitcher
         private bool m_mediaPlayerIsPlaying;
         private bool m_userIsDraggingSlider;
 
-        private int m_playlistIndex;
-        private Collection<string> m_playlist;
-
-        private readonly Collection<int> m_playedIndices;
-        private int m_currentPlayingIndexOfPlayedIndices;
-
-        public string DefaultPath { get; set; }
-        public string FileFilter { get; set; }
-
-        public string SpecifiedFile { get; set; }
-        public string FilePlaying
-        {
-            get => mePlayer.Source?.LocalPath;
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                {
-                    mePlayer.Source = new Uri(value);
-                    m_playlistIndex = m_playlist.IndexOf(value);
-                    m_playedIndices.Add(m_playlistIndex);
-                    LoadSongInfo(value);
-                }
-            }
-        }
-        public TimeSpan Position => mePlayer.Position;
+        public TimeSpan Position => TimeSpan.FromSeconds(sliProgress.Value);
 
         private TimeSpan m_desiredPosition;
-
-        public void SetPosition(TimeSpan position)
-        {
-            m_desiredPosition = position;
-            mePlayer.Pause();
-        }
-
+         
         public SpotifyMusicPlayer()
         {
             InitializeComponent();
-            m_playedIndices = new Collection<int>();
             mePlayer.MediaOpened += MePlayer_MediaOpened;
             var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
             timer.Tick += TimerTick;
@@ -70,15 +34,9 @@ namespace PodcastMusicSwitcher
         }
 
         public event EventHandler<EventArgs> MediaEnded;
-        public event EventHandler<EventArgs> MediaLoaded;
 
         private async void TimerTick(object sender, EventArgs e)
         {
-            //if ((mePlayer.Source == null) || (!mePlayer.NaturalDuration.HasTimeSpan) || (m_userIsDraggingSlider))
-            //{
-            //    return;
-            //}
-
             if (m_userIsDraggingSlider)
             {
                 return;
@@ -113,87 +71,6 @@ namespace PodcastMusicSwitcher
 
                 return sliProgress.Maximum - sliProgress.Value < 1.5;
             }
-        } 
-
-        private void Open_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
-
-        private void Open_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            Open();
-        }
-
-        public void Open()
-        {
-            if (!File.Exists(DefaultPath))
-            {
-                DefaultPath = @"C:\";
-            }
-            var openFileDialog = new OpenFileDialog { Filter = FileFilter, InitialDirectory = DefaultPath };
-            if (openFileDialog.ShowDialog() != true)
-            {
-                return;
-            }
-
-            LoadFile(openFileDialog.FileName);
-        }
-
-        public void LoadFile(string fileName)
-        {
-            SpecifiedFile = fileName;
-            mePlayer.Source = new Uri(SpecifiedFile);
-
-            string extension = Path.GetExtension(SpecifiedFile);
-
-            m_playlist = new Collection<string>();
-            switch (extension.ToLower())
-            {
-                case ".mp3":
-                    m_playlist.Add(SpecifiedFile);
-                    m_desiredPosition = new TimeSpan(0, 0, 0);
-                    break;
-                case ".wpl":
-                    var playlistReader = new PlaylistReader();
-                    m_playlist = playlistReader.GetItems(SpecifiedFile);
-                    m_playlistIndex = 0;
-                    if (m_playlist.Count > 0)
-                    {
-                        mePlayer.Source = new Uri(m_playlist[m_playlistIndex]);
-                    }
-                    else
-                    {
-                        MessageBox.Show("Spillelisten er tom");
-                    }
-                    break;
-            }
-
-            LoadSongInfo(m_playlist[m_playlistIndex]);
-        }
-
-        private void LoadSongInfo(string fileName)
-        {
-            if (string.Compare(Path.GetExtension(fileName), ".mp3", true, CultureInfo.InvariantCulture) != 0)
-            {
-                SongTitleLabel.Content = Path.GetFileName(fileName);
-                ArtistLabel.Content = string.Empty;
-                AlbumLabel.Content = string.Empty;
-                return;
-            }
-
-            if (!File.Exists(fileName))
-            {
-                MessageBox.Show(fileName + " does not exist");
-                return;
-            }
-            TagLib.File f = TagLib.File.Create(fileName);
-
-            SongTitleLabel.Content = f.Tag.Title;
-            ArtistLabel.Content = f.Tag.JoinedPerformers;
-            AlbumLabel.Content = f.Tag.Album;
-            
-            lblDuration.Text = f.Properties.Duration.ToString(@"hh\:mm\:ss");
         }
 
         public async void Next()
@@ -203,18 +80,6 @@ namespace PodcastMusicSwitcher
                 await m_spotify.Player.SkipNext();
                 await GetCurrentlyPlayingOnSpotify();
             }
-            //m_playedIndices.Add(m_playlistIndex);
-            //m_currentPlayingIndexOfPlayedIndices++;
-            //LoadSong();
-        }
-
-        private void LoadSong()
-        {
-            string nextFileName = m_playlist[m_playlistIndex];
-            mePlayer.Source = new Uri(nextFileName);
-            LoadSongInfo(nextFileName);
-            mePlayer.Pause();
-            m_desiredPosition = new TimeSpan(0);
         }
 
         private async void Previous()
@@ -224,12 +89,6 @@ namespace PodcastMusicSwitcher
                 await m_spotify.Player.SkipPrevious();
                 await GetCurrentlyPlayingOnSpotify();
             }
-            //if (m_currentPlayingIndexOfPlayedIndices > 1)
-            //{
-            //    m_currentPlayingIndexOfPlayedIndices--;
-            //    m_playlistIndex = m_playedIndices[m_currentPlayingIndexOfPlayedIndices];
-            //}
-            //LoadSong();
         }
 
         private void Play_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -264,7 +123,7 @@ namespace PodcastMusicSwitcher
                 await m_spotify.Player.ResumePlayback();
                 await GetCurrentlyPlayingOnSpotify();
             }
-            //mePlayer.Play();
+            
             mePlayer.Position = m_desiredPosition;
             m_mediaPlayerIsPlaying = true;
         }
@@ -310,9 +169,7 @@ namespace PodcastMusicSwitcher
             {
                 await m_spotify.Player.PausePlayback();
             }
-            //mePlayer.Pause();
             m_desiredPosition = mePlayer.Position;
-            
         }
 
         private void Stop_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -327,7 +184,6 @@ namespace PodcastMusicSwitcher
 
         public async void Stop()
         {
-            //mePlayer.Stop();
             if (m_spotify != null)
             {
                 await m_spotify.Player.PausePlayback();
@@ -343,11 +199,7 @@ namespace PodcastMusicSwitcher
         private void SliProgressDragCompleted(object sender, DragCompletedEventArgs e)
         {
             m_userIsDraggingSlider = false;
-            if (m_spotify != null)
-            {
-                m_spotify.Player.SeekTo(new PlayerSeekToRequest((long)(sliProgress.Value * 1000)));
-            }
-           //mePlayer.Position = TimeSpan.FromSeconds(sliProgress.Value);
+            m_spotify?.Player.SeekTo(new PlayerSeekToRequest((long)(sliProgress.Value * 1000)));
         }
 
         private void SliProgressValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -373,7 +225,6 @@ namespace PodcastMusicSwitcher
                 pbVolume.Value = m_volumePercent;
                 m_spotify.Player.SetVolume(new PlayerVolumeRequest(m_volumePercent));
             }
-           // mePlayer.Volume += (e.Delta > 0) ? 0.1 : -0.1;
         }
 
         private void Mute_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -405,37 +256,12 @@ namespace PodcastMusicSwitcher
 
         private void NextButton_Click(object sender, RoutedEventArgs e)
         {
-            if (Path.GetExtension(SpecifiedFile) == ".mp3")
-            {
-                Open();
-                OnMediaLoaded();
-                if (m_mediaPlayerIsPlaying)
-                {
-                    mePlayer.Play();
-                }
-            }
-            else
-            {
-                Next();
-                if (m_mediaPlayerIsPlaying)
-                {
-                    mePlayer.Play();
-                }   
-            }
+            Next();
         }
 
         private void PreviousButton_Click(object sender, RoutedEventArgs e)
         {
             Previous();
-            if (m_mediaPlayerIsPlaying)
-            {
-                //mePlayer.Play();
-            }   
-        }
-
-        private void OnMediaLoaded()
-        {
-            MediaLoaded?.Invoke(this, new EventArgs());
         }
 
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)

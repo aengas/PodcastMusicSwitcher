@@ -8,7 +8,7 @@ namespace PodcastMusicSwitcher
 {
     public partial class MainWindow
     {
-        public int SwitchIntervalInSeconds = 240;
+        public int SwitchIntervalInSeconds = 3;
 
         private DateTime m_podcastStarted;
         private bool m_songPlaying;
@@ -23,9 +23,7 @@ namespace PodcastMusicSwitcher
             
             PodcastPlayer.DefaultPath = @"D:\Music\Radioresepsjonen";
             PodcastPlayer.FileFilter = "Media files (*.mp3)|*.mp3|All files (*.*)|*.*";
-            SongPlayer.DefaultPath = @"D:\Music\Spillelister";
-            SongPlayer.FileFilter = "Windows Media Player playlists(*.wpl)|*.wpl|All files (*.*)|*.*";
-
+            
             PodcastPlayer.MediaLoaded += PodcastPlayer_MediaLoaded;
 
             var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
@@ -60,12 +58,7 @@ namespace PodcastMusicSwitcher
             m_podcastStarted = DateTime.Now;
             SwitchButton.Content = "Bytt til podkast";
         }
-
-        private void SongEnded(object sender, EventArgs e)
-        {
-            SwitchToPodcast();
-        }
-
+ 
         private void SwitchToPodcast()
         {
             m_podcastStarted = DateTime.Now;
@@ -73,7 +66,6 @@ namespace PodcastMusicSwitcher
             m_songPlaying = false;
             PodcastPlayer.Play();
             SongPlayer.Pause();
-            //SongPlayer.Next();
             SwitchButton.Content = "Bytt til musikk";
         }
 
@@ -148,13 +140,7 @@ namespace PodcastMusicSwitcher
             rootElement.Add(new XElement("PodcastPosition", Math.Floor(PodcastPlayer.Position.TotalSeconds)));
             rootElement.Add(new XElement("PodcastDefaultPath", PodcastPlayer.DefaultPath));
             rootElement.Add(new XElement("PodcastFileFilter", PodcastPlayer.FileFilter));
-            //rootElement.Add(new XElement("SongPlayerShuffle", SongPlayer.ShuffleCheckBox.IsChecked));
-            rootElement.Add(new XElement("SongPlaylist", SongPlayer.SpecifiedFile));
-            rootElement.Add(new XElement("SongPlaying", SongPlayer.FilePlaying));
-            rootElement.Add(new XElement("SongDefaultPath", SongPlayer.DefaultPath));
-            rootElement.Add(new XElement("SongFileFilter", SongPlayer.FileFilter));
             rootElement.Add(new XElement("SongPosition", Math.Floor(SongPlayer.Position.TotalSeconds)));
-         //   rootElement.Add(new XElement("SwitchIntervalInSeconds", SwitchIntervalInSeconds));
             rootElement.Add(new XElement("AccessToken", SongPlayer.AccessTokenTextBox.Text));
 
             File.WriteAllText(m_configFileName, rootElement.ToString());
@@ -193,33 +179,12 @@ namespace PodcastMusicSwitcher
                             case "PodcastPosition":
                                 PodcastPlayer.SetPosition(new TimeSpan(0, 0, Int32.Parse(el.Value)));
                                 break;
-                            //case "SongPlaylist":
-                            //    SongPlayer.LoadFile(el.Value);
-                            //    break;
-                            //case "SongPlaying":
-                            //    SongPlayer.FilePlaying = el.Value; 
-                            //    break;
-                            //case "SongPosition":
-                            //    SongPlayer.SetPosition(new TimeSpan(0, 0, Int32.Parse(el.Value)));
-                            //    break;
-                            //case "SongPlayerShuffle":
-                            //    SongPlayer.ShuffleCheckBox.IsChecked = bool.Parse(el.Value);
-                            //    break;
                             case "PodcastDefaultPath":
                                 PodcastPlayer.DefaultPath = el.Value;
                                 break;
-                            //case "SongDefaultPath":
-                            //    SongPlayer.DefaultPath = el.Value;
-                            //    break;
-                            //case "SongPlayerFileFilter":
-                            //    SongPlayer.FileFilter = el.Value;
-                            //    break;
                             case "PodcastFileFilter":
                                 PodcastPlayer.FileFilter = el.Value;
                                 break;
-                            //case "SwitchIntervalInSeconds":
-                            //    SwitchIntervalInSeconds = int.Parse(el.Value);
-                            //    break;
                             case "AccessToken":
                                 SongPlayer.AccessTokenTextBox.Text = el.Value;
                                 break;
