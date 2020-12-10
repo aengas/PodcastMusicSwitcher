@@ -121,7 +121,12 @@ namespace PodcastMusicSwitcher
 
                 if (m_spotify != null)
                 {
-                    await m_spotify.Player.ResumePlayback();
+                    CurrentlyPlayingContext currentPlayback = await m_spotify.Player.GetCurrentPlayback();
+                    if (!currentPlayback.IsPlaying)
+                    {
+                        await m_spotify.Player.ResumePlayback();
+                    }
+                    
                     await GetCurrentlyPlayingOnSpotify();
                 }
 

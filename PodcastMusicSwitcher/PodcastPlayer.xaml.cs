@@ -25,6 +25,8 @@ namespace PodcastMusicSwitcher
         
         public TimeSpan Position => mePlayer.Position;
 
+        public TimeSpan Duration { get; private set; }
+
         private TimeSpan m_desiredPosition;
 
         public PodcastPlayer()
@@ -39,6 +41,7 @@ namespace PodcastMusicSwitcher
         public void SetPosition(TimeSpan position)
         {
             m_desiredPosition = position;
+            mePlayer.Position = m_desiredPosition;
             mePlayer.Pause();
         }
 
@@ -142,6 +145,7 @@ namespace PodcastMusicSwitcher
             CommentLabel.Text = f.Tag.Comment;
 
             lblDuration.Text = f.Properties.Duration.ToString(@"hh\:mm\:ss");
+            Duration = f.Properties.Duration;
         }
 
         public void Next()
@@ -223,6 +227,7 @@ namespace PodcastMusicSwitcher
         {
             m_userIsDraggingSlider = false;
             mePlayer.Position = TimeSpan.FromSeconds(sliProgress.Value);
+            m_desiredPosition = mePlayer.Position;
         }
 
         private void SliProgressValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

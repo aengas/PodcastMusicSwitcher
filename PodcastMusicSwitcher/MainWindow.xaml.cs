@@ -15,6 +15,7 @@ namespace PodcastMusicSwitcher
         private bool m_podcastPlaying;
         private bool m_isPaused;
         private TimeSpan m_podcastPlayTime;
+        private int m_switchTimeIndex;
         private const string m_configFileName = "config.xml";
 
         public MainWindow()
@@ -25,7 +26,7 @@ namespace PodcastMusicSwitcher
             PodcastPlayer.FileFilter = "Media files (*.mp3)|*.mp3|All files (*.*)|*.*";
             
             PodcastPlayer.MediaLoaded += PodcastPlayer_MediaLoaded;
-
+            m_switchTimeIndex = 0;
             var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
             timer.Tick += TimerTick;
             timer.Start();
@@ -38,8 +39,11 @@ namespace PodcastMusicSwitcher
 
         private void TimerTick(object sender, EventArgs e)
         {
-            if (m_podcastPlaying && !m_isPaused && DateTime.Now - m_podcastStarted > TimeSpan.FromSeconds(SwitchIntervalInSeconds))
+            m_switchTimeIndex = ChangeTimesComboBox.SelectedIndex;
+            if (m_podcastPlaying && !m_isPaused && (PodcastPlayer.Position.TotalSeconds >= (int)ChangeTimesComboBox.Items[m_switchTimeIndex]))
             {
+                m_switchTimeIndex++;
+                ChangeTimesComboBox.SelectedIndex = m_switchTimeIndex;
                 SwitchToMusic();
             }
 
@@ -71,12 +75,24 @@ namespace PodcastMusicSwitcher
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
+            CalculateChangedTimesComboBoxSelectedIndex();
             m_podcastStarted = DateTime.Now;
             m_podcastPlaying = true;
             m_songPlaying = false;
             PodcastPlayer.Play();
             StartButton.IsEnabled = false;
             SwitchButton.IsEnabled = true;
+        }
+
+        private void CalculateChangedTimesComboBoxSelectedIndex()
+        {
+            int i = 0;
+            while ((int)ChangeTimesComboBox.Items[i] <= PodcastPlayer.Position.TotalSeconds)
+            {
+                i++;
+            }
+
+            ChangeTimesComboBox.SelectedIndex = i;
         }
 
         private void PauseButton_Click(object sender, RoutedEventArgs e)
@@ -177,7 +193,7 @@ namespace PodcastMusicSwitcher
                                 PodcastPlayer.LoadFile(el.Value);
                                 break;
                             case "PodcastPosition":
-                                PodcastPlayer.SetPosition(new TimeSpan(0, 0, Int32.Parse(el.Value)));
+                                PodcastPlayer.SetPosition(new TimeSpan(0, 0, int.Parse(el.Value)));
                                 break;
                             case "PodcastDefaultPath":
                                 PodcastPlayer.DefaultPath = el.Value;
@@ -195,6 +211,18 @@ namespace PodcastMusicSwitcher
                 {
                     MessageBox.Show(ex.Message, "Kunne ikke laste config-fil");
                 }
+
+                int durationSeconds = (int)PodcastPlayer.Duration.TotalSeconds;
+                for (int i = 0; i < durationSeconds; i += SwitchIntervalInSeconds)
+                {
+                    if (i > 0)
+                    {
+                        ChangeTimesComboBox.Items.Add(i);
+                    }
+                }
+
+                ChangeTimesComboBox.SelectedIndex = 0;
+                CalculateChangedTimesComboBoxSelectedIndex();
             }
         }
 
