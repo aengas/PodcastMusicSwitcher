@@ -14,7 +14,7 @@
         <CommandBinding Command="MediaCommands.Stop" CanExecute="Stop_CanExecute" Executed="Stop_Executed" />
         <CommandBinding Command="MediaCommands.MuteVolume" CanExecute="Mute_CanExecute" Executed="Mute_Executed" />
     </UserControl.CommandBindings>
-    <Grid MouseWheel="Grid_MouseWheel" Name="OuterGrid">
+    <Grid MouseWheel="Grid_MouseWheel">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="3*"/>

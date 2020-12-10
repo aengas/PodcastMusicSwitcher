@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Xml.Linq;
@@ -7,8 +6,6 @@ namespace PodcastMusicSwitcher
 {
     public class PlaylistReader
     {
-        public string FileName { get; set; }
-
         public Collection<string> GetItems(string fileName)
         {
             var directoryName = Path.GetDirectoryName(fileName);

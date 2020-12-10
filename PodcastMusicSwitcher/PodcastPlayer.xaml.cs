@@ -25,30 +25,8 @@ namespace PodcastMusicSwitcher
         public string FileFilter { get; set; }
 
         public string SpecifiedFile { get; set; }
-        public string FilePlaying
-        {
-            get
-            {
-                return mePlayer.Source.LocalPath;
-            }
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                {
-                    mePlayer.Source = new Uri(value);
-                    m_playlistIndex = m_playlist.IndexOf(value);
-                    m_playedIndices.Add(m_playlistIndex);
-                    LoadSongInfo(value);
-                }
-            }
-        }
-        public TimeSpan Position
-        {
-            get
-            {
-                return mePlayer.Position;
-            }
-        }
+        
+        public TimeSpan Position => mePlayer.Position;
 
         private TimeSpan m_desiredPosition;
 
@@ -149,9 +127,9 @@ namespace PodcastMusicSwitcher
 
         private void LoadSongInfo(string fileName)
         {
-            IndexLabel.Content = string.Format("({0}/{1})", m_playlistIndex + 1, m_playlist.Count);
+            IndexLabel.Content = $"({m_playlistIndex + 1}/{m_playlist.Count})";
 
-            if (String.Compare(Path.GetExtension(fileName), ".mp3", true, CultureInfo.InvariantCulture) != 0)
+            if (string.Compare(Path.GetExtension(fileName), ".mp3", true, CultureInfo.InvariantCulture) != 0)
             {
                 SongTitleLabel.Content = Path.GetFileName(fileName);
                 PerformerLabel.Content = string.Empty;
