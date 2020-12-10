@@ -53,13 +53,13 @@ namespace PodcastMusicSwitcher
         {
             InitializeComponent();
             m_playedIndices = new Collection<int>();
-            mePlayer.MediaOpened += mePlayer_MediaOpened;
+            mePlayer.MediaOpened += MePlayer_MediaOpened;
             var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
             timer.Tick += TimerTick;
             timer.Start();
         }
 
-        void mePlayer_MediaOpened(object sender, RoutedEventArgs e)
+        private void MePlayer_MediaOpened(object sender, RoutedEventArgs e)
         {
             mePlayer.Position = m_desiredPosition;
         }

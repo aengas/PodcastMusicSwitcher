@@ -18,9 +18,6 @@ namespace PodcastMusicSwitcher
         private int m_playlistIndex;
         private Collection<string> m_playlist;
 
-        private readonly Collection<int> m_playedIndices;
-        private int m_currentPlayingIndexOfPlayedIndices;
-
         public string DefaultPath { get; set; }
         public string FileFilter { get; set; }
 
@@ -30,23 +27,22 @@ namespace PodcastMusicSwitcher
 
         private TimeSpan m_desiredPosition;
 
+        public PodcastPlayer()
+        {
+            InitializeComponent();
+            mePlayer.MediaOpened += MePlayer_MediaOpened;
+            var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+            timer.Tick += TimerTick;
+            timer.Start();
+        }
+
         public void SetPosition(TimeSpan position)
         {
             m_desiredPosition = position;
             mePlayer.Pause();
         }
 
-        public PodcastPlayer()
-        {
-            InitializeComponent();
-            m_playedIndices = new Collection<int>();
-            mePlayer.MediaOpened += mePlayer_MediaOpened;
-            var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
-            timer.Tick += TimerTick;
-            timer.Start();
-        }
-
-        void mePlayer_MediaOpened(object sender, RoutedEventArgs e)
+        private void MePlayer_MediaOpened(object sender, RoutedEventArgs e)
         {
             mePlayer.Position = m_desiredPosition;
         }
@@ -56,7 +52,7 @@ namespace PodcastMusicSwitcher
 
         private void TimerTick(object sender, EventArgs e)
         {
-            if ((mePlayer.Source == null) || (!mePlayer.NaturalDuration.HasTimeSpan) || (m_userIsDraggingSlider))
+            if (mePlayer.Source == null || !mePlayer.NaturalDuration.HasTimeSpan || m_userIsDraggingSlider)
             {
                 return;
             }
@@ -127,17 +123,10 @@ namespace PodcastMusicSwitcher
 
         private void LoadSongInfo(string fileName)
         {
-            IndexLabel.Content = $"({m_playlistIndex + 1}/{m_playlist.Count})";
-
             if (string.Compare(Path.GetExtension(fileName), ".mp3", true, CultureInfo.InvariantCulture) != 0)
             {
                 SongTitleLabel.Content = Path.GetFileName(fileName);
                 PerformerLabel.Content = string.Empty;
-                AlbumArtistLabel.Content = string.Empty;
-                AlbumLabel.Content = string.Empty;
-                TrackLabel.Content = string.Empty;
-                YearLabel.Content = string.Empty;
-                ComposerLabel.Content = string.Empty;
                 return;
             }
 
@@ -150,20 +139,13 @@ namespace PodcastMusicSwitcher
 
             SongTitleLabel.Content = f.Tag.Title;
             PerformerLabel.Content = f.Tag.JoinedPerformers;
-            AlbumArtistLabel.Content = f.Tag.JoinedAlbumArtists;
-            AlbumLabel.Content = f.Tag.Album;
-            TrackLabel.Content = f.Tag.Track;
-            YearLabel.Content = f.Tag.Year;
-            ComposerLabel.Content = f.Tag.JoinedComposers;
-
+            
             lblDuration.Text = f.Properties.Duration.ToString(@"hh\:mm\:ss");
         }
 
         public void Next()
         {
             m_playlistIndex = GetNextPlaylistIndex();
-            m_playedIndices.Add(m_playlistIndex);
-            m_currentPlayingIndexOfPlayedIndices++;
             LoadSong();
         }
 
@@ -178,33 +160,9 @@ namespace PodcastMusicSwitcher
 
         private int GetNextPlaylistIndex()
         {
-            if (ShuffleCheckBox.IsChecked == true)
-            {
-                if (m_currentPlayingIndexOfPlayedIndices == m_playedIndices.Count - 1)
-                {
-                    return new Random().Next(0, m_playlist.Count);
-                }
-
-                return m_playedIndices[++m_currentPlayingIndexOfPlayedIndices];
-            }
-
             return m_playlistIndex < m_playlist.Count - 1 ? ++m_playlistIndex : 0;
         }
-
-        private void Previous()
-        {
-            if (m_currentPlayingIndexOfPlayedIndices > 1)
-            {
-                m_currentPlayingIndexOfPlayedIndices--;
-                m_playlistIndex = m_playedIndices[m_currentPlayingIndexOfPlayedIndices];
-            }
-            else if (ShuffleCheckBox.IsChecked == false)
-            {
-                m_playlistIndex = m_playlistIndex > 0 ? --m_playlistIndex : 0;
-            }
-            LoadSong();
-        }
-
+ 
         private void Play_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = (mePlayer != null) && (mePlayer.Source != null);
@@ -319,15 +277,6 @@ namespace PodcastMusicSwitcher
                 {
                     mePlayer.Play();
                 }
-            }
-        }
-
-        private void PreviousButton_Click(object sender, RoutedEventArgs e)
-        {
-            Previous();
-            if (m_mediaPlayerIsPlaying)
-            {
-                mePlayer.Play();
             }
         }
 

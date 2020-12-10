@@ -19,20 +19,7 @@ namespace PodcastMusicSwitcher
         public MainWindow()
         {
             InitializeComponent();
-            PodcastPlayer.AlbumArtistHeader.Visibility = Visibility.Collapsed;
-            PodcastPlayer.AlbumArtistLabel.Visibility = Visibility.Collapsed;
-            PodcastPlayer.AlbumHeader.Visibility = Visibility.Collapsed;
-            PodcastPlayer.AlbumLabel.Visibility = Visibility.Collapsed;
-            PodcastPlayer.TrackHeader.Visibility = Visibility.Collapsed;
-            PodcastPlayer.TrackLabel.Visibility = Visibility.Collapsed;
-            PodcastPlayer.YearHeader.Visibility = Visibility.Collapsed;
-            PodcastPlayer.YearLabel.Visibility = Visibility.Collapsed;
-            PodcastPlayer.ComposerHeader.Visibility = Visibility.Collapsed;
-            PodcastPlayer.ComposerLabel.Visibility = Visibility.Collapsed;
-            PodcastPlayer.ShuffleCheckBox.Visibility = Visibility.Collapsed;
-            PodcastPlayer.IndexLabel.Visibility = Visibility.Collapsed;
-            PodcastPlayer.PreviousButton.Visibility = Visibility.Collapsed;
-
+            
             PodcastPlayer.DefaultPath = @"D:\Music\Radioresepsjonen";
             PodcastPlayer.FileFilter = "Media files (*.mp3)|*.mp3|All files (*.*)|*.*";
             SongPlayer.DefaultPath = @"D:\Music\Spillelister";
