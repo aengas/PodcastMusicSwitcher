@@ -27,9 +27,9 @@
                      MinWidth="500" 
                      MaxWidth="500"
                      VerticalContentAlignment="Center"/>
-            <TextBlock Margin="10 4 0 0">           
+            <TextBlock Margin="10 4 5 0">           
                 <Hyperlink NavigateUri="https://developer.spotify.com/console/get-album/" RequestNavigate="Hyperlink_RequestNavigate" >
-                    Get AccessToken
+                    Hent AccessToken
                 </Hyperlink>
             </TextBlock>
         </StackPanel>
@@ -45,7 +45,7 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Label Grid.Row="0" Grid.Column="0" Content="Title" Name="SongTitleHeader"/>
+            <Label Grid.Row="0" Grid.Column="0" Content="Tittel" Name="SongTitleHeader"/>
             <Label Grid.Row="0" Grid.Column="1" Name="SongTitleLabel"/>
             <Label Grid.Row="1" Grid.Column="0" Content="Artist" Name="ArtistHeader"/>
             <Label Grid.Row="1" Grid.Column="1" Name="ArtistLabel"/>
@@ -76,13 +76,13 @@
                     </ItemsPanelTemplate>
                 </StatusBar.ItemsPanel>
                 <StatusBarItem Grid.Column="0">
-                    <Button Content="Previous" 
+                    <Button Content="Forrige" 
                             Padding="5"
                             x:Name="PreviousButton" 
                             Click="PreviousButton_Click" />
                 </StatusBarItem>
                 <StatusBarItem Grid.Column="1">
-                    <Button Content="Next" 
+                    <Button Content="Neste" 
                             x:Name="NextButton" 
                             Padding="5"
                             Click="NextButton_Click"/>

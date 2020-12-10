@@ -24,7 +24,7 @@ namespace PodcastMusicSwitcher
             InitializeComponent();
             mePlayer.MediaOpened += MePlayer_MediaOpened;
             var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
-           // timer.Tick += TimerTick;
+            timer.Tick += TimerTick;
             timer.Start();
         }
 
@@ -56,7 +56,6 @@ namespace PodcastMusicSwitcher
                         sliProgress.Value = m_currentlyPlaying.ProgressMs == null ? 0.00 : (double)m_currentlyPlaying.ProgressMs / 1000;
                     }
                 }
-                
             }
         }
 
@@ -105,27 +104,39 @@ namespace PodcastMusicSwitcher
 
         public async void Play()
         {
-            if (m_spotify == null)
+            try
             {
-                if (string.IsNullOrEmpty(AccessTokenTextBox.Text))
+                if (m_spotify == null)
                 {
-                    MessageBox.Show("You have to supply an access token to be able to connect to Spotify", "AccessToken missing");
-                    return;
+                    if (string.IsNullOrEmpty(AccessTokenTextBox.Text))
+                    {
+                        MessageBox.Show("You have to supply an access token to be able to connect to Spotify", "AccessToken missing");
+                        return;
+                    }
+                    m_spotify = new SpotifyClient(AccessTokenTextBox.Text);
+                    m_volumePercent = 50;
+                    pbVolume.Value = m_volumePercent;
+                    await m_spotify.Player.SetVolume(new PlayerVolumeRequest(m_volumePercent));
                 }
-                m_spotify = new SpotifyClient(AccessTokenTextBox.Text);
-                m_volumePercent = 50;
-                pbVolume.Value = m_volumePercent;
-                await m_spotify.Player.SetVolume(new PlayerVolumeRequest(m_volumePercent));
-            }
 
-            if (m_spotify != null)
-            {
-                await m_spotify.Player.ResumePlayback();
-                await GetCurrentlyPlayingOnSpotify();
+                if (m_spotify != null)
+                {
+                    await m_spotify.Player.ResumePlayback();
+                    await GetCurrentlyPlayingOnSpotify();
+                }
+
+                mePlayer.Position = m_desiredPosition;
+                m_mediaPlayerIsPlaying = true;
             }
-            
-            mePlayer.Position = m_desiredPosition;
-            m_mediaPlayerIsPlaying = true;
+            catch (Exception exception)
+            {
+                ShowError(exception);
+            }
+        }
+
+        private void ShowError(Exception exception)
+        {
+            MessageBox.Show(exception.ToString(), "En feil oppstod");
         }
 
         private FullTrack m_currentTrack;

@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              x:Name="PodcastPlayerControl"
              mc:Ignorable="d" 
-             d:DesignHeight="110" d:DesignWidth="700"
+             d:DesignHeight="200" d:DesignWidth="700"
              DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <UserControl.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Open" CanExecute="Open_CanExecute" Executed="Open_Executed" />
@@ -29,19 +29,27 @@
         </StackPanel>
 
         <Grid Grid.Row="1"
-              Margin="0 0 0 2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="100" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+              Margin="5 0 0 2">
             <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Label Grid.Row="0" Grid.Column="0" Content="Title" Name="SongTitleHeader"/>
-            <Label Grid.Row="0" Grid.Column="1" Name="SongTitleLabel" />
-            <Label Grid.Row="1" Grid.Column="0" Content="Performer" Name="PerformerHeader"/>
-            <Label Grid.Row="1" Grid.Column="1" Name="PerformerLabel" />
+            <TextBlock Grid.Row="0" 
+                       Name="PerformerLabel" 
+                       FontSize="18" 
+                       FontWeight="Bold"
+                       Margin="0 0 0 5"/>
+            <StackPanel Grid.Row="1"
+                        Orientation="Vertical">
+                <TextBlock Name="SongTitleLabel" 
+                           FontSize="12" 
+                           FontWeight="Bold" />
+                <TextBlock Name="CommentLabel" 
+                           Margin="0 2 0 5"
+                           FontSize="12" 
+                           FontWeight="Normal"
+                           FontStyle="Italic"/>
+            </StackPanel>
         </Grid>
 
         <MediaElement Name="mePlayer" Grid.Row="2" LoadedBehavior="Manual" Stretch="None" MediaEnded="MePlayer_OnMediaEnded" />
@@ -66,7 +74,7 @@
                     </ItemsPanelTemplate>
                 </StatusBar.ItemsPanel>
                 <StatusBarItem Grid.Column="0">
-                    <Button Content="Next" 
+                    <Button Content="Neste" 
                             x:Name="NextButton" 
                             Padding="5"
                             Click="NextButton_Click"/>

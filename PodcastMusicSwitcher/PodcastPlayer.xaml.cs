@@ -125,8 +125,8 @@ namespace PodcastMusicSwitcher
         {
             if (string.Compare(Path.GetExtension(fileName), ".mp3", true, CultureInfo.InvariantCulture) != 0)
             {
-                SongTitleLabel.Content = Path.GetFileName(fileName);
-                PerformerLabel.Content = string.Empty;
+                SongTitleLabel.Text = Path.GetFileName(fileName);
+                PerformerLabel.Text = string.Empty;
                 return;
             }
 
@@ -137,9 +137,10 @@ namespace PodcastMusicSwitcher
             }
             TagLib.File f = TagLib.File.Create(fileName);
 
-            SongTitleLabel.Content = f.Tag.Title;
-            PerformerLabel.Content = f.Tag.JoinedPerformers;
-            
+            SongTitleLabel.Text = f.Tag.Title;
+            PerformerLabel.Text = f.Tag.JoinedPerformers;
+            CommentLabel.Text = f.Tag.Comment;
+
             lblDuration.Text = f.Properties.Duration.ToString(@"hh\:mm\:ss");
         }
 
