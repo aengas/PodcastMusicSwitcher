@@ -22,27 +22,26 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal">
-            <Label Content="Fil: "/>
-            <TextBlock x:Name="MusicFileName" MinWidth="500" Margin="0 0 20 0" TextAlignment="Left" VerticalAlignment="Center"/>
-            <Button Command="ApplicationCommands.Open" Content="Browse..." />
+            <Label Content="Fil: " VerticalAlignment="Center"/>
+            <TextBlock x:Name="MusicFileName" MinWidth="450" Margin="0 0 20 0" TextAlignment="Left" VerticalAlignment="Center"/>
+            <Button Command="ApplicationCommands.Open" Content="Browse..." Margin="0 5 0 5" Padding="5 1 5 1" />
             <Separator />
-
         </StackPanel>
 
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1"
+              Margin="0 0 0 2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="350*" />
-                <ColumnDefinition Width="229*" />
-                <ColumnDefinition Width="121*"/>
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Label Grid.Row="0" Grid.Column="0" Content="Title" Name="SongTitleHeader"/>
-            <Label Grid.Row="0" Grid.Column="1" Name="SongTitleLabel" Grid.ColumnSpan="2"/>
+            <Label Grid.Row="0" Grid.Column="1" Name="SongTitleLabel" />
             <Label Grid.Row="1" Grid.Column="0" Content="Performer" Name="PerformerHeader"/>
-            <Label Grid.Row="1" Grid.Column="1" Name="PerformerLabel" Grid.ColumnSpan="2"/>
+            <Label Grid.Row="1" Grid.Column="1" Name="PerformerLabel" />
         </Grid>
 
         <MediaElement Name="mePlayer" Grid.Row="2" LoadedBehavior="Manual" Stretch="None" MediaEnded="MePlayer_OnMediaEnded" />
@@ -67,7 +66,10 @@
                     </ItemsPanelTemplate>
                 </StatusBar.ItemsPanel>
                 <StatusBarItem Grid.Column="0">
-                    <Button Content="Next" x:Name="NextButton" Click="NextButton_Click"/>
+                    <Button Content="Next" 
+                            x:Name="NextButton" 
+                            Padding="5"
+                            Click="NextButton_Click"/>
                 </StatusBarItem>
                 <StatusBarItem Grid.Column="1">
                     <TextBlock Name="lblProgressStatus">00:00:00</TextBlock>
@@ -82,7 +84,10 @@
                     <ProgressBar Name="pbVolume" Width="50" Height="12" Maximum="1" Value="{Binding ElementName=mePlayer, Path=Volume}" />
                 </StatusBarItem>
                 <StatusBarItem Grid.Column="5">
-                    <Button Command="MediaCommands.MuteVolume" Content="Mute" x:Name="MuteButton"/>
+                    <Button Command="MediaCommands.MuteVolume" 
+                            Padding="5"
+                            Content="Mute" 
+                            x:Name="MuteButton"/>
                 </StatusBarItem>
             </StatusBar>
         </StackPanel>

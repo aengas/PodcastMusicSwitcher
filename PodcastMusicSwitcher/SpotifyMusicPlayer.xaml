@@ -23,7 +23,10 @@
         <StackPanel Grid.Row="0"
                     Orientation="Horizontal">
             <Label Content="AccessToken: "/>
-            <TextBox x:Name="AccessTokenTextBox" MinWidth="455" MaxWidth="455" VerticalContentAlignment="Center"/>
+            <TextBox x:Name="AccessTokenTextBox" 
+                     MinWidth="500" 
+                     MaxWidth="500"
+                     VerticalContentAlignment="Center"/>
             <TextBlock Margin="10 4 0 0">           
                 <Hyperlink NavigateUri="https://developer.spotify.com/console/get-album/" RequestNavigate="Hyperlink_RequestNavigate" >
                     Get AccessToken
@@ -31,10 +34,11 @@
             </TextBlock>
         </StackPanel>
 
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1"
+              Margin="0 0 0 5">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition/>
@@ -72,10 +76,16 @@
                     </ItemsPanelTemplate>
                 </StatusBar.ItemsPanel>
                 <StatusBarItem Grid.Column="0">
-                    <Button Content="Previous" x:Name="PreviousButton" Click="PreviousButton_Click" />
+                    <Button Content="Previous" 
+                            Padding="5"
+                            x:Name="PreviousButton" 
+                            Click="PreviousButton_Click" />
                 </StatusBarItem>
                 <StatusBarItem Grid.Column="1">
-                    <Button Content="Next" x:Name="NextButton" Click="NextButton_Click"/>
+                    <Button Content="Next" 
+                            x:Name="NextButton" 
+                            Padding="5"
+                            Click="NextButton_Click"/>
                 </StatusBarItem>
                 <StatusBarItem Grid.Column="2">
                     <TextBlock Name="lblProgressStatus">00:00:00</TextBlock>
@@ -90,7 +100,10 @@
                     <ProgressBar Name="pbVolume" Width="50" Height="12" Maximum="100" />
                 </StatusBarItem>
                 <StatusBarItem Grid.Column="6">
-                    <Button Command="MediaCommands.MuteVolume" Content="Mute" x:Name="MuteButton"/>
+                    <Button Command="MediaCommands.MuteVolume" 
+                            Content="Mute" 
+                            Padding="5"
+                            x:Name="MuteButton"/>
                 </StatusBarItem>
             </StatusBar>
         </StackPanel>

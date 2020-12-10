@@ -24,7 +24,7 @@ namespace PodcastMusicSwitcher
             InitializeComponent();
             mePlayer.MediaOpened += MePlayer_MediaOpened;
             var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
-            timer.Tick += TimerTick;
+           // timer.Tick += TimerTick;
             timer.Start();
         }
 
