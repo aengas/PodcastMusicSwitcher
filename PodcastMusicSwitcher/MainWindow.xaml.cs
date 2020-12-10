@@ -11,6 +11,7 @@ namespace PodcastMusicSwitcher
         public int SwitchIntervalInSeconds = 240;
 
         private DateTime m_podcastStarted;
+        private bool m_songPlaying;
         private bool m_podcastPlaying;
         private bool m_isPaused;
         private TimeSpan m_podcastPlayTime;
@@ -43,12 +44,18 @@ namespace PodcastMusicSwitcher
             {
                 SwitchToMusic();
             }
+
+            if (m_songPlaying && !m_isPaused && SongPlayer.IsFinished)
+            {
+                SwitchToPodcast();
+            }
         }
 
         private void SwitchToMusic()
         {
             PodcastPlayer.Pause();
             m_podcastPlaying = false;
+            m_songPlaying = true;
             SongPlayer.Play();
             m_podcastStarted = DateTime.Now;
             SwitchButton.Content = "Bytt til podkast";
@@ -63,9 +70,10 @@ namespace PodcastMusicSwitcher
         {
             m_podcastStarted = DateTime.Now;
             m_podcastPlaying = true;
+            m_songPlaying = false;
             PodcastPlayer.Play();
             SongPlayer.Pause();
-            SongPlayer.Next();
+            //SongPlayer.Next();
             SwitchButton.Content = "Bytt til musikk";
         }
 
@@ -73,6 +81,7 @@ namespace PodcastMusicSwitcher
         {
             m_podcastStarted = DateTime.Now;
             m_podcastPlaying = true;
+            m_songPlaying = false;
             PodcastPlayer.Play();
             StartButton.IsEnabled = false;
             SwitchButton.IsEnabled = true;
@@ -139,15 +148,18 @@ namespace PodcastMusicSwitcher
             rootElement.Add(new XElement("PodcastPosition", Math.Floor(PodcastPlayer.Position.TotalSeconds)));
             rootElement.Add(new XElement("PodcastDefaultPath", PodcastPlayer.DefaultPath));
             rootElement.Add(new XElement("PodcastFileFilter", PodcastPlayer.FileFilter));
-            rootElement.Add(new XElement("SongPlayerShuffle", SongPlayer.ShuffleCheckBox.IsChecked));
+            //rootElement.Add(new XElement("SongPlayerShuffle", SongPlayer.ShuffleCheckBox.IsChecked));
             rootElement.Add(new XElement("SongPlaylist", SongPlayer.SpecifiedFile));
             rootElement.Add(new XElement("SongPlaying", SongPlayer.FilePlaying));
             rootElement.Add(new XElement("SongDefaultPath", SongPlayer.DefaultPath));
             rootElement.Add(new XElement("SongFileFilter", SongPlayer.FileFilter));
             rootElement.Add(new XElement("SongPosition", Math.Floor(SongPlayer.Position.TotalSeconds)));
-            rootElement.Add(new XElement("SwitchIntervalInSeconds", SwitchIntervalInSeconds));
+         //   rootElement.Add(new XElement("SwitchIntervalInSeconds", SwitchIntervalInSeconds));
+            rootElement.Add(new XElement("AccessToken", SongPlayer.AccessTokenTextBox.Text));
 
             File.WriteAllText(m_configFileName, rootElement.ToString());
+
+            SongPlayer.Stop();
         }
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
@@ -181,36 +193,38 @@ namespace PodcastMusicSwitcher
                             case "PodcastPosition":
                                 PodcastPlayer.SetPosition(new TimeSpan(0, 0, Int32.Parse(el.Value)));
                                 break;
-                            case "SongPlaylist":
-                                SongPlayer.LoadFile(el.Value);
-                                break;
-                            case "SongPlaying":
-                                SongPlayer.FilePlaying = el.Value; 
-                                break;
-                            case "SongPosition":
-                                SongPlayer.SetPosition(new TimeSpan(0, 0, Int32.Parse(el.Value)));
-                                break;
-                            case "SongPlayerShuffle":
-                                SongPlayer.ShuffleCheckBox.IsChecked = bool.Parse(el.Value);
-                                break;
+                            //case "SongPlaylist":
+                            //    SongPlayer.LoadFile(el.Value);
+                            //    break;
+                            //case "SongPlaying":
+                            //    SongPlayer.FilePlaying = el.Value; 
+                            //    break;
+                            //case "SongPosition":
+                            //    SongPlayer.SetPosition(new TimeSpan(0, 0, Int32.Parse(el.Value)));
+                            //    break;
+                            //case "SongPlayerShuffle":
+                            //    SongPlayer.ShuffleCheckBox.IsChecked = bool.Parse(el.Value);
+                            //    break;
                             case "PodcastDefaultPath":
                                 PodcastPlayer.DefaultPath = el.Value;
                                 break;
-                            case "SongDefaultPath":
-                                SongPlayer.DefaultPath = el.Value;
-                                break;
-                            case "SongPlayerFileFilter":
-                                SongPlayer.FileFilter = el.Value;
-                                break;
+                            //case "SongDefaultPath":
+                            //    SongPlayer.DefaultPath = el.Value;
+                            //    break;
+                            //case "SongPlayerFileFilter":
+                            //    SongPlayer.FileFilter = el.Value;
+                            //    break;
                             case "PodcastFileFilter":
                                 PodcastPlayer.FileFilter = el.Value;
                                 break;
-                            case "SwitchIntervalInSeconds":
-                                SwitchIntervalInSeconds = Int32.Parse(el.Value);
+                            //case "SwitchIntervalInSeconds":
+                            //    SwitchIntervalInSeconds = int.Parse(el.Value);
+                            //    break;
+                            case "AccessToken":
+                                SongPlayer.AccessTokenTextBox.Text = el.Value;
                                 break;
                         }
                     }
-                    
                 }
                 catch (Exception ex)
                 {

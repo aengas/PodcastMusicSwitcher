@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              x:Name="SpotifyMusicPlayerControl"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="700"
+             d:DesignHeight="150" d:DesignWidth="700"
              DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <UserControl.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Open" CanExecute="Open_CanExecute" Executed="Open_Executed" />
@@ -17,18 +17,19 @@
     <Grid MouseWheel="Grid_MouseWheel">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="3*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal">
-            <Label Content="Fil: "/>
-            <TextBlock x:Name="MusicFileName" MinWidth="500" Margin="0 0 20 0" TextAlignment="Left" VerticalAlignment="Center"/>
-            <Button Command="ApplicationCommands.Open" Content="Browse..." />
-            <CheckBox Content="Shuffle" x:Name="ShuffleCheckBox" IsChecked="True" Margin="10 0 0 0" VerticalAlignment="Center"/>
-            <Label x:Name="IndexLabel" Content="0/0"/>
-            <Separator />
-
+        <StackPanel Grid.Row="0"
+                    Orientation="Horizontal">
+            <Label Content="AccessToken: "/>
+            <TextBox x:Name="AccessTokenTextBox" MinWidth="455" MaxWidth="455" VerticalContentAlignment="Center"/>
+            <TextBlock Margin="10 4 0 0">           
+                <Hyperlink NavigateUri="https://developer.spotify.com/console/get-album/" RequestNavigate="Hyperlink_RequestNavigate" >
+                    Get AccessToken
+                </Hyperlink>
+            </TextBlock>
         </StackPanel>
 
         <Grid Grid.Row="1">
@@ -40,25 +41,13 @@
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
             </Grid.RowDefinitions>
             <Label Grid.Row="0" Grid.Column="0" Content="Title" Name="SongTitleHeader"/>
             <Label Grid.Row="0" Grid.Column="1" Name="SongTitleLabel"/>
-            <Label Grid.Row="1" Grid.Column="0" Content="Performer" Name="PerformerHeader"/>
-            <Label Grid.Row="1" Grid.Column="1" Name="PerformerLabel"/>
-            <Label Grid.Row="2" Grid.Column="0" Content="Album Artist" Name="AlbumArtistHeader"/>
-            <Label Grid.Row="2" Grid.Column="1" Name="AlbumArtistLabel"/>
-            <Label Grid.Row="3" Grid.Column="0" Content="Album" Name="AlbumHeader"/>
-            <Label Grid.Row="3" Grid.Column="1" Name="AlbumLabel"/>
-            <Label Grid.Row="4" Grid.Column="0" Content="Track" Name="TrackHeader"/>
-            <Label Grid.Row="4" Grid.Column="1" Name="TrackLabel"/>
-            <Label Grid.Row="5" Grid.Column="0" Content="Year" Name="YearHeader"/>
-            <Label Grid.Row="5" Grid.Column="1" Name="YearLabel"/>
-            <Label Grid.Row="6" Grid.Column="0" Content="Composer" Name="ComposerHeader"/>
-            <Label Grid.Row="6" Grid.Column="1" Name="ComposerLabel"/>
+            <Label Grid.Row="1" Grid.Column="0" Content="Artist" Name="ArtistHeader"/>
+            <Label Grid.Row="1" Grid.Column="1" Name="ArtistLabel"/>
+            <Label Grid.Row="2" Grid.Column="0" Content="Album" Name="AlbumHeader"/>
+            <Label Grid.Row="2" Grid.Column="1" Name="AlbumLabel"/>
         </Grid>
 
         <MediaElement Name="mePlayer" Grid.Row="2" LoadedBehavior="Manual" Stretch="None" MediaEnded="MePlayer_OnMediaEnded" />
@@ -99,7 +88,7 @@
                     <TextBlock Name="lblDuration">00:00:00</TextBlock>
                 </StatusBarItem>
                 <StatusBarItem Grid.Column="5">
-                    <ProgressBar Name="pbVolume" Width="50" Height="12" Maximum="1" Value="{Binding ElementName=mePlayer, Path=Volume}" />
+                    <ProgressBar Name="pbVolume" Width="50" Height="12" Maximum="100" />
                 </StatusBarItem>
                 <StatusBarItem Grid.Column="6">
                     <Button Command="MediaCommands.MuteVolume" Content="Mute" x:Name="MuteButton"/>
