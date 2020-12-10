@@ -71,7 +71,11 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="MusicPlayer.xaml">
+    <Page Include="Mp3MusicPlayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SpotifyMusicPlayer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -81,8 +85,11 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MusicPlayer.xaml.cs">
-      <DependentUpon>MusicPlayer.xaml</DependentUpon>
+    <Compile Include="Mp3MusicPlayer.xaml.cs">
+      <DependentUpon>Mp3MusicPlayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SpotifyMusicPlayer.xaml.cs">
+      <DependentUpon>SpotifyMusicPlayer.xaml</DependentUpon>
     </Compile>
     <Compile Include="PlaylistReader.cs" />
     <Compile Include="PodcastPlayer.xaml.cs">

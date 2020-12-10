@@ -7,7 +7,7 @@
     <StackPanel>
         <local:PodcastPlayer x:Name="PodcastPlayer" MediaEnded="PodcastEnded"/>
         <Separator Height="3" Foreground="Black"/>
-        <local:MusicPlayer x:Name="SongPlayer" MediaEnded="SongEnded"/>
+        <local:SpotifyMusicPlayer x:Name="SongPlayer" MediaEnded="SongEnded"/>
         <Separator Height="3" Foreground="Black"/>
         <DockPanel Dock="Right">
             <Button Content="Bytt til musikk" DockPanel.Dock="Left" x:Name="SwitchButton" IsEnabled="False" Click="SwitchButton_Click"/>

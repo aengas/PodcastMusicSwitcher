@@ -10,7 +10,7 @@ using Microsoft.Win32;
 
 namespace PodcastMusicSwitcher
 {
-    public partial class MusicPlayer
+    public partial class SpotifyMusicPlayer
     {
         private bool m_mediaPlayerIsPlaying;
         private bool m_userIsDraggingSlider;
@@ -49,7 +49,7 @@ namespace PodcastMusicSwitcher
             mePlayer.Pause();
         }
 
-        public MusicPlayer()
+        public SpotifyMusicPlayer()
         {
             InitializeComponent();
             m_playedIndices = new Collection<int>();
