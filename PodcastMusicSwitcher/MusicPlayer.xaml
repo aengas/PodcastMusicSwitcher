@@ -1,0 +1,110 @@
+﻿<UserControl x:Class="PodcastMusicSwitcher.MusicPlayer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             x:Name="UserControl"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="700"
+             DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    <UserControl.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Open" CanExecute="Open_CanExecute" Executed="Open_Executed" />
+        <CommandBinding Command="MediaCommands.Play" CanExecute="Play_CanExecute" Executed="Play_Executed" />
+        <CommandBinding Command="MediaCommands.Pause" CanExecute="Pause_CanExecute" Executed="Pause_Executed" />
+        <CommandBinding Command="MediaCommands.Stop" CanExecute="Stop_CanExecute" Executed="Stop_Executed" />
+        <CommandBinding Command="MediaCommands.MuteVolume" CanExecute="Mute_CanExecute" Executed="Mute_Executed" />
+    </UserControl.CommandBindings>
+    <Grid MouseWheel="Grid_MouseWheel" Name="OuterGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <Label Content="Fil: "/>
+            <TextBlock x:Name="MusicFileName" MinWidth="500" Margin="0 0 20 0" TextAlignment="Left" VerticalAlignment="Center"/>
+            <Button Command="ApplicationCommands.Open" Content="Browse..." />
+            <CheckBox Content="Shuffle" x:Name="ShuffleCheckBox" IsChecked="True" Margin="10 0 0 0" VerticalAlignment="Center"/>
+            <Label x:Name="IndexLabel" Content="0/0"/>
+            <Separator />
+
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Grid.Column="0" Content="Title" Name="SongTitleHeader"/>
+            <Label Grid.Row="0" Grid.Column="1" Name="SongTitleLabel"/>
+            <Label Grid.Row="1" Grid.Column="0" Content="Performer" Name="PerformerHeader"/>
+            <Label Grid.Row="1" Grid.Column="1" Name="PerformerLabel"/>
+            <Label Grid.Row="2" Grid.Column="0" Content="Album Artist" Name="AlbumArtistHeader"/>
+            <Label Grid.Row="2" Grid.Column="1" Name="AlbumArtistLabel"/>
+            <Label Grid.Row="3" Grid.Column="0" Content="Album" Name="AlbumHeader"/>
+            <Label Grid.Row="3" Grid.Column="1" Name="AlbumLabel"/>
+            <Label Grid.Row="4" Grid.Column="0" Content="Track" Name="TrackHeader"/>
+            <Label Grid.Row="4" Grid.Column="1" Name="TrackLabel"/>
+            <Label Grid.Row="5" Grid.Column="0" Content="Year" Name="YearHeader"/>
+            <Label Grid.Row="5" Grid.Column="1" Name="YearLabel"/>
+            <Label Grid.Row="6" Grid.Column="0" Content="Composer" Name="ComposerHeader"/>
+            <Label Grid.Row="6" Grid.Column="1" Name="ComposerLabel"/>
+        </Grid>
+
+        <MediaElement Name="mePlayer" Grid.Row="2" LoadedBehavior="Manual" Stretch="None" MediaEnded="MePlayer_OnMediaEnded" />
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" >
+            <Button Command="MediaCommands.Play" Content="Play" Visibility="Collapsed" />
+            <Button Command="MediaCommands.Pause" Content="Pause" Visibility="Collapsed"/>
+            <Button Command="MediaCommands.Stop" Content="Stop" Visibility="Collapsed"/>
+            <StatusBar Width="{Binding ActualWidth, ElementName=UserControl}">
+                <StatusBar.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                        </Grid>
+                    </ItemsPanelTemplate>
+                </StatusBar.ItemsPanel>
+                <StatusBarItem Grid.Column="0">
+                    <Button Content="Previous" x:Name="PreviousButton" Click="PreviousButton_Click" />
+                </StatusBarItem>
+                <StatusBarItem Grid.Column="1">
+                    <Button Content="Next" x:Name="NextButton" Click="NextButton_Click"/>
+                </StatusBarItem>
+                <StatusBarItem Grid.Column="2">
+                    <TextBlock Name="lblProgressStatus">00:00:00</TextBlock>
+                </StatusBarItem>
+                <StatusBarItem Grid.Column="3" HorizontalContentAlignment="Stretch">
+                    <Slider Name="sliProgress" Thumb.DragStarted="SliProgressDragStarted"  Thumb.DragCompleted="SliProgressDragCompleted" ValueChanged="SliProgressValueChanged" />
+                </StatusBarItem>
+                <StatusBarItem Grid.Column="4">
+                    <TextBlock Name="lblDuration">00:00:00</TextBlock>
+                </StatusBarItem>
+                <StatusBarItem Grid.Column="5">
+                    <ProgressBar Name="pbVolume" Width="50" Height="12" Maximum="1" Value="{Binding ElementName=mePlayer, Path=Volume}" />
+                </StatusBarItem>
+                <StatusBarItem Grid.Column="6">
+                    <Button Command="MediaCommands.MuteVolume" Content="Mute" x:Name="MuteButton"/>
+                </StatusBarItem>
+            </StatusBar>
+        </StackPanel>
+    </Grid>
+</UserControl>

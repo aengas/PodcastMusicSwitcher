@@ -1,12 +1,18 @@
 ﻿<Window x:Class="PodcastMusicSwitcher.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PodcastMusicSwitcher"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="Podcast Music Switcher" Height="700" Width="700"
+        MinWidth="700" SizeToContent="WidthAndHeight" Closed="MainWindow_OnClosed" Loaded="MainWindow_OnLoaded">
+    <StackPanel>
+        <local:MusicPlayer x:Name="PodcastPlayer" MediaEnded="PodcastEnded"/>
+        <Separator Height="3" Foreground="Black"/>
+        <local:MusicPlayer x:Name="SongPlayer" MediaEnded="SongEnded"/>
+        <Separator Height="3" Foreground="Black"/>
+        <DockPanel Dock="Right">
+            <Button Content="Bytt til musikk" DockPanel.Dock="Left" x:Name="SwitchButton" IsEnabled="False" Click="SwitchButton_Click"/>
+            <Button Content="Start" HorizontalAlignment="Right" DockPanel.Dock="Right" x:Name="StartButton" Click="StartButton_Click"/>
+            <Button Content="Pause" HorizontalAlignment="Right" DockPanel.Dock="Right" x:Name="PauseButton" Click="PauseButton_Click" />
+        </DockPanel>
+    </StackPanel>
 </Window>
