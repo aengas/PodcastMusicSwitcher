@@ -67,8 +67,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Availability.cs" />
     <Compile Include="IndexPoint.cs" />
     <Compile Include="MetadataResponse.cs" />
+    <Compile Include="OnDemand.cs" />
     <Compile Include="PrePlay.cs" />
     <Compile Include="Song.cs" />
     <Compile Include="Titles.cs" />
