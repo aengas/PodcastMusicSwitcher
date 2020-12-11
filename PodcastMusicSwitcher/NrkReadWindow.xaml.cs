@@ -148,7 +148,7 @@ namespace PodcastMusicSwitcher
                 
                 if (talk.FromBeginningWithoutSong.TotalSeconds > 0)
                 {
-                    m_mainWindow.ChangeTimesComboBox.Items.Add(talk.FromBeginningWithoutSong.TotalSeconds);
+                    m_mainWindow.ChangeTimesComboBox.Items.Add(new TimeSpan(0, talk.FromBeginningWithoutSong.Hours, talk.FromBeginningWithoutSong.Minutes, talk.FromBeginningWithoutSong.Seconds));
                 }
             }
 

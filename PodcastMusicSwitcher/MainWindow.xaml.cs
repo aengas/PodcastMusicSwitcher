@@ -40,7 +40,7 @@ namespace PodcastMusicSwitcher
         private void TimerTick(object sender, EventArgs e)
         {
             m_switchTimeIndex = ChangeTimesComboBox.SelectedIndex;
-            if (m_podcastPlaying && !m_isPaused && (PodcastPlayer.Position.TotalSeconds >= (int)ChangeTimesComboBox.Items[m_switchTimeIndex]))
+            if (m_podcastPlaying && !m_isPaused && (PodcastPlayer.Position.TotalSeconds >= (int)((TimeSpan)ChangeTimesComboBox.Items[m_switchTimeIndex]).TotalSeconds))
             {
                 m_switchTimeIndex++;
                 ChangeTimesComboBox.SelectedIndex = m_switchTimeIndex;
@@ -87,7 +87,7 @@ namespace PodcastMusicSwitcher
         private void CalculateChangedTimesComboBoxSelectedIndex()
         {
             int i = 0;
-            while ((int)ChangeTimesComboBox.Items[i] <= PodcastPlayer.Position.TotalSeconds)
+            while ((int)((TimeSpan)ChangeTimesComboBox.Items[i]).TotalSeconds <= PodcastPlayer.Position.TotalSeconds)
             {
                 i++;
             }
@@ -217,7 +217,7 @@ namespace PodcastMusicSwitcher
                 {
                     if (i > 0)
                     {
-                        ChangeTimesComboBox.Items.Add(i);
+                        ChangeTimesComboBox.Items.Add(new TimeSpan(0, 0, 0, i));
                     }
                 }
 

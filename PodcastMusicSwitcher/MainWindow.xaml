@@ -40,7 +40,8 @@
                       x:Name="ChangeTimesComboBox"
                       Width="75"
                       Height="20"
-                      HorizontalAlignment="Left"/>
+                      HorizontalAlignment="Left">
+            </ComboBox>
             <Button Grid.Column="3"
                     x:Name="GetFromNrkButton"
                     Margin="10 0 0 0"
