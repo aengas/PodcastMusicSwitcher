@@ -19,7 +19,9 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition />
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
@@ -39,7 +41,15 @@
                       Width="75"
                       Height="20"
                       HorizontalAlignment="Left"/>
-            <Button Grid.Column="3" 
+            <Button Grid.Column="3"
+                    x:Name="GetFromNrkButton"
+                    Margin="10 0 0 0"
+                    Height="20"
+                    Padding="3 0 3 0"
+                    HorizontalAlignment="Left"
+                    Content="Hent fra NRK"
+                    Click="GetFromNrkButton_OnClick"/>
+            <Button Grid.Column="5" 
                     Content="Pause" 
                     Margin="5"
                     Padding="5"
@@ -47,7 +57,7 @@
                     DockPanel.Dock="Right" 
                     x:Name="PauseButton" 
                     Click="PauseButton_Click" />
-            <Button Grid.Column="4"
+            <Button Grid.Column="6"
                     Content="Start" 
                     Margin="5"
                     Padding="5"

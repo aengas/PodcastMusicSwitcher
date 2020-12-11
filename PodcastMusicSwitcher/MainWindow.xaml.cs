@@ -237,5 +237,11 @@ namespace PodcastMusicSwitcher
                 SwitchToPodcast();
             }
         }
+
+        private void GetFromNrkButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var nrkReadWindow = new NrkReadWindow();
+            nrkReadWindow.Show();
+        }
     }
 }
