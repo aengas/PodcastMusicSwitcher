@@ -10,6 +10,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition/>
+            <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -62,5 +63,11 @@
                  x:Name="EpisodeDetailsListBoxs"
                  DisplayMemberPath="Display"
                  Margin="20 10 0 10"/>
+        <Button Grid.Row="2"
+                Grid.Column="3"
+                x:Name="TransferTimesButton"
+                Height="20"
+                Content="Overfør tidspunkt"
+                Click="TransferTimesButton_OnClick"/>
     </Grid>
 </Window>

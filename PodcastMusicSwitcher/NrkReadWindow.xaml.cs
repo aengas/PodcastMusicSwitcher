@@ -23,8 +23,11 @@ namespace PodcastMusicSwitcher
     /// </summary>
     public partial class NrkReadWindow : Window
     {
-        public NrkReadWindow()
+        private readonly MainWindow m_mainWindow;
+
+        public NrkReadWindow(MainWindow mainWindow)
         {
+            m_mainWindow = mainWindow;
             InitializeComponent();
             serieTextBox.Text = "radioresepsjonen";
             seasonTextBox.Text = "201909";
@@ -116,6 +119,7 @@ namespace PodcastMusicSwitcher
                     lastSnakk = tpi.StartTime;
                     snakkCount++;
                     songsBetween.Clear();
+                    talks.Add(tpi);
                 }
 
                 if (tpi.Type == "sang")
@@ -132,6 +136,25 @@ namespace PodcastMusicSwitcher
             TimeSpan parsed = XmlConvert.ToTimeSpan(indexPoint.StartPoint);
 
             return parsed;
+        }
+
+        private Collection<TimePointItem> talks = new Collection<TimePointItem>();
+
+        private void TransferTimesButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            m_mainWindow.ChangeTimesComboBox.Items.Clear(); 
+            foreach (TimePointItem talk in talks)
+            {
+                
+                if (talk.FromBeginningWithoutSong.TotalSeconds > 0)
+                {
+                    m_mainWindow.ChangeTimesComboBox.Items.Add(talk.FromBeginningWithoutSong.TotalSeconds);
+                }
+            }
+
+            m_mainWindow.ChangeTimesComboBox.SelectedIndex = 0;
+            
+            this.Close();   
         }
     }
 

@@ -240,7 +240,7 @@ namespace PodcastMusicSwitcher
 
         private void GetFromNrkButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var nrkReadWindow = new NrkReadWindow();
+            var nrkReadWindow = new NrkReadWindow(this);
             nrkReadWindow.Show();
         }
     }
